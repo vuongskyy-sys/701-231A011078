@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Thực Hành - Đồng Hồ Đếm Ngược</title>
+    <style>
+        :root {
+            --primary-color: #0f4c81;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --panel-bg: rgba(255, 255, 255, 0.06);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --timer-color: #38bdf8;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* --- VÙNG HIỂN THỊ ĐỒNG HỒ CHÍNH --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .timer-card {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            padding: 40px 60px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+        }
+
+        .timer-card h2 {
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        /* Đồng hồ dạng số MM:SS */
+        .timer-display {
+            font-size: 84px;
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace; /* Giữ các con số không bị dịch chuyển vị trí */
+            color: var(--timer-color);
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+            margin-bottom: 25px;
+        }
+
+        /* --- ANIMATION KHI DƯỚI 1 PHÚT --- */
+        .warning-mode {
+            color: var(--danger-color) !important;
+            text-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
+            animation: pulse-glow 1s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(1.03);
+                opacity: 1;
+            }
+        }
+
+        /* Nút điều khiển */
+        .btn-control {
+            background: #ffffff;
+            color: #0f172a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-control:hover {
+            background: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        /* --- CUSTOM MODAL ALERT --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-box {
+            background: #1e293b;
+            border: 2px solid var(--danger-color);
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            animation: zoom-in 0.3s ease-out;
+        }
+
+        @keyframes zoom-in {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-box h3 {
+            font-size: 24px;
+            color: var(--danger-color);
+            margin-bottom: 12px;
+        }
+
+        .modal-box p {
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .btn-modal-close {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-modal-close:hover { background: #b91c1c; }
+
+        /* --- FOOTER --- */
+        footer {
+            background: rgba(15, 23, 42, 0.6);
+            border-top: 1px solid var(--panel-border);
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .timer-card { padding: 30px 20px; }
+            .timer-display { font-size: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="timer-card">
+            <h2>Thời gian làm bài còn lại</h2>
+            <div class="timer-display" id="display">10:00</div>
+            <button class="btn-control" id="btn-action" onclick="toggleTimer()">BẮT ĐẦU</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="alert-modal">
+        <div class="modal-box">
+            <h3>⚠️ HẾT GIỜ LÀM BÀI!</h3>
+            <p>Thời gian đếm ngược 10 phút đã kết thúc. Vui lòng dừng bút và nộp bài hệ thống.</p>
+            <button class="btn-modal-close" onclick="closeModal()">XÁC NHẬN</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Môn học: Lập Trình Web — Sinh viên thực hiện: Lê Công Đức Thiện | MSSV: 231A011078</p>
+    </footer>
+
+    <script>
+        let countdownInterval = null;
+        let totalSeconds = 10 * 60; // 10 phút đổi ra giây
+        let isRunning = false;
+
+        const displayElement = document.getElementById('display');
+        const btnAction = document.getElementById('btn-action');
+
+        // Hàm cập nhật giao diện thời gian dạng MM:SS
+        function renderTime() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+
+            // Định dạng chuỗi có số 0 đứng trước nếu nhỏ hơn 10
+            const strMinutes = minutes < 10 ? '0' + minutes : minutes;
+            const strSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+            displayElement.textContent = strMinutes + ':' + strSeconds;
+
+            // Kích hoạt hiệu ứng Animation nhấp nháy khi thời gian dưới 1 phút (60 giây)
+            if (totalSeconds < 60) {
+                displayElement.classList.add('warning-mode');
+            } else {
+                displayElement.classList.remove('warning-mode');
+            }
+        }
+
+        // Hàm xử lý đếm ngược
+        function startCountdown() {
+            // Cơ chế an toàn: Xóa bỏ interval cũ trước khi tạo mới để tránh trùng lặp trùng lặp tốc độ đếm
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            countdownInterval = setInterval(function() {
+                if (totalSeconds <= 0) {
+                    // Dừng hoàn toàn interval khi chạm mốc 0
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    isRunning = false;
+                    btnAction.textContent = "RESET";
+                    
+                    // Hiển thị hộp thoại cảnh báo Modal
+                    document.getElementById('alert-modal').style.display = 'flex';
+                    return;
+                }
+
+                totalSeconds--;
+                renderTime();
+            }, 1000); // Lặp lại chính xác sau mỗi 1 giây (1000ms)
+        }
+
+        // Hàm điều khiển Nút Bấm (Bắt đầu / Tạm dừng / Làm mới)
+        function toggleTimer() {
+            if (totalSeconds === 0) {
+                // Trạng thái Reset lại từ đầu
+                totalSeconds = 10 * 60;
+                renderTime();
+                btnAction.textContent = "BẮT ĐẦU";
+                return;
+            }
+
+            if (!isRunning) {
+                isRunning = true;
+                btnAction.textContent = "TẠM DỪNG";
+                startCountdown();
+            } else {
+                isRunning = false;
+                btnAction.textContent = "TIẾP TỤC";
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('alert-modal').style.display = 'none';
+        }
+
+        // Nạp cấu hình thời gian ban đầu khi load trang
+        renderTime();
+    </script>
+</body>
+</html>

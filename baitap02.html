@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Thực Hành 2 - Form Đăng Ký Người Dùng</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            --success-color: #16a34a;
+            --error-color: #dc2626;
+            --text-dark: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* --- KHUNG FORM RESPONSIVE --- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .register-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border-top: 6px solid var(--primary-color);
+        }
+
+        .register-card h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .register-card p.subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            transition: all 0.2s;
+            color: var(--text-dark);
+        }
+
+        /* Trạng thái khi click vào ô nhập */
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* CSS hiển thị thông báo lỗivalidate */
+        .error-hint {
+            color: var(--error-color);
+            font-size: 12.5px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* Khung Checkbox điều khoản */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input {
+            margin-top: 4px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13.5px;
+            color: #475569;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Hộp báo thành công */
+        .success-alert {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        /* Thiết kế Responsive cho thiết bị di động nhỏ */
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="register-card">
+            <h2>ĐĂNG KÝ TÀI KHOẢN</h2>
+            <p class="subtitle">Bài thực hành số 2 - Hệ thống biểu mẫu</p>
+
+            <div class="success-alert" id="msg-success">
+                🎉 Đăng ký thành công! Dữ liệu đã được lưu an toàn vào LocalStorage.
+            </div>
+
+            <form id="vhu-register-form" novalidate>
+                <div class="form-group">
+                    <label for="reg-name">Họ và tên</label>
+                    <input type="text" id="reg-name" placeholder="Nhập đầy đủ họ và tên">
+                    <div class="error-hint" id="err-name">❌ Vui lòng nhập họ và tên của bạn!</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-email">Địa chỉ Email</label>
+                    <input type="email" id="reg-email" placeholder="name@example.com">
+                    <div class="error-hint" id="err-email">❌ Định dạng Email không hợp lệ (Thiếu @ hoặc sai tên miền)!</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-pass">Mật khẩu (Ẩn)</label>
+                    <input type="password" id="reg-pass" placeholder="Tối thiểu 8 ký tự">
+                    <div class="error-hint" id="err-pass">❌ Mật khẩu yếu! Phải có ít nhất 8 ký tự, bao gồm: 1 chữ hoa (A-Z), 1 chữ thường (a-z) và 1 chữ số (0-9).</div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="reg-agree">
+                    <label for="reg-agree">Tôi hoàn toàn đồng ý với các điều khoản và quy định sử dụng hệ thống.</label>
+                </div>
+                <div class="error-hint" id="err-agree" style="margin-top: -15px; margin-bottom: 15px;">❌ Bạn phải tích chọn đồng ý với điều khoản dịch vụ!</div>
+
+                <button type="submit" class="btn-submit">TẠO TÀI KHOẢN MỚI</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>Môn học: Lập Trình Web — Sinh viên thực hiện: Lê Công Đức Thiện | MSSV: 231A011078</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('vhu-register-form');
+        
+        form.addEventListener('submit', function(event) {
+            // Chặn hành vi load lại trang tự động
+            event.preventDefault();
+
+            // Lấy giá trị từ các ô nhập liệu
+            const nameValue = document.getElementById('reg-name').value.trim();
+            const emailValue = document.getElementById('reg-email').value.trim();
+            const passValue = document.getElementById('reg-pass').value;
+            const agreeChecked = document.getElementById('reg-agree').checked;
+
+            let isFormValid = true;
+
+            // 1. Kiểm tra Họ và tên
+            if (nameValue === "") {
+                document.getElementById('err-name').style.display = 'block';
+                isFormValid = false;
+            } else {
+                document.getElementById('err-name').style.display = 'none';
+            }
+
+            // 2. Kiểm tra định dạng Email bằng Regular Expression
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailValue)) {
+                document.getElementById('err-email').style.display = 'block';
+                isFormValid = false;
+            } else {
+                document.getElementById('err-email').style.display = 'none';
+            }
+
+            // 3. Kiểm tra mật khẩu mạnh (Ít nhất 8 ký tự, 1 chữ hoa, 1 chữ thường, 1 số)
+            const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passRegex.test(passValue)) {
+                document.getElementById('err-pass').style.display = 'block';
+                isFormValid = false;
+            } else {
+                document.getElementById('err-pass').style.display = 'none';
+            }
+
+            // 4. Kiểm tra Checkbox điều khoản
+            if (!agreeChecked) {
+                document.getElementById('err-agree').style.display = 'block';
+                isFormValid = false;
+            } else {
+                document.getElementById('err-agree').style.display = 'none';
+            }
+
+            // 5. Nếu vượt qua tất cả các bước kiểm tra (Hợp lệ)
+            if (isFormValid) {
+                // Đóng gói đối tượng dữ liệu sạch
+                const accountData = {
+                    fullName: nameValue,
+                    emailAddress: emailValue,
+                    passwordText: passValue
+                };
+
+                // Lưu chuỗi JSON vào bộ nhớ LocalStorage của trình duyệt
+                localStorage.setItem('registered_user_data', JSON.stringify(accountData));
+
+                // Hiển thị thông báo thành công màu xanh lá
+                document.getElementById('msg-success').style.display = 'block';
+
+                // Xóa sạch dữ liệu trên form để người dùng có thể nhập tài khoản khác
+                form.reset();
+            } else {
+                // Nếu có lỗi, ẩn thông báo thành công cũ đi
+                document.getElementById('msg-success').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

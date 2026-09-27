@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần Lý Thuyết - Lập Trình Web</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background: #f4f7fb; color: #333; line-height: 1.7; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* MENU ĐỒNG BỘ */
+        .main-nav { background: #ffffff; padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 9999; }
+        .nav-logo { font-weight: bold; font-size: 20px; color: #0f4c81; text-decoration: none; }
+        .nav-logo span { color: #ff4500; }
+        .nav-links { list-style: none; display: flex; gap: 10px; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 600; font-size: 13px; padding: 8px 12px; border-radius: 4px; transition: all 0.2s; }
+        .nav-links a:hover, .nav-links a.active { background: #fff5f0; color: #ff4500; }
+
+        /* HERO HEADER */
+        header { background: linear-gradient(135deg, #0f4c81, #3a86ff); color: white; padding: 35px 20px; text-align: center; }
+        header h1 { font-size: 2rem; margin-bottom: 5px; }
+        header p { font-size: 1rem; opacity: 0.9; }
+
+        /* CONTAINER NỘI DUNG */
+        .container { max-width: 1100px; margin: 20px auto; padding: 0 20px; flex: 1; }
+        .card { background: white; padding: 30px; margin: 25px 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { color: #0f4c81; margin-bottom: 15px; border-left: 6px solid #3a86ff; padding-left: 10px; font-size: 1.4rem; }
+        h3 { margin-top: 15px; color: #1d3557; font-size: 1.1rem; }
+        p { margin-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f8fafc; color: #0f4c81; font-weight: bold; }
+        
+        pre { background: #1e293b; color: #f8fafc; padding: 15px; border-radius: 8px; overflow-x: auto; margin: 15px 0; font-family: 'Courier New', Courier, monospace; }
+        code { font-family: monospace; font-weight: bold; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 5px; }
+        
+        .note { background: #fef3c7; border-left: 4px solid #d97706; padding: 12px; margin: 15px 0; border-radius: 4px; font-size: 14px; color: #92400e; }
+        footer { background: #ffffff; border-top: 1px solid #e2e8f0; padding: 15px; text-align: center; font-size: 13px; color: #64748b; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <nav class="main-nav">
+        <a href="bt01.html" class="nav-logo">VHU<span>FOOD</span></a>
+        <ul class="nav-links">
+            <li><a href="bt01.html">Trang Chủ (Bài 1)</a></li>
+            <li><a href="bt02.html">Đăng Ký (Bài 2)</a></li>
+            <li><a href="bt03.html">Đếm Ngược (Bài 3)</a></li>
+            <li><a href="LyThuyetLTW.html" class="active">Trả Lời Lý Thuyết</a></li>
+            <li><a href="diemdanh.html">Thông Tin Điểm Danh</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>BÁO CÁO PHẦN LÝ THUYẾT</h1>
+        <p>Sinh viên thực hiện: Lê Công Đức Thiện | MSSV: 231A011078</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card" id="c1">
+            <h2>Câu 1: Phân biệt CSS Grid và CSS Flexbox</h2>
+            <p>CSS Grid và CSS Flexbox là hai hệ thống bố cục cực kỳ mạnh mẽ trong CSS dùng để thiết kế giao diện web responsive (co giãn thích ứng linh hoạt), tuy nhiên chúng có các đặc tính tư duy thiết kế rất khác nhau:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tiêu chí</th>
+                        <th>CSS Flexbox (Flexible Box)</th>
+                        <th>CSS Grid (Grid Layout)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Số chiều không gian</b></td>
+                        <td>Một chiều (1D) — Định hướng theo dòng cột (X) HOẶC hàng (Y) tại một thời điểm.</td>
+                        <td>Hai chiều (2D) — Định hướng song song cả hàng (Rows) VÀ cột (Columns) cùng lúc.</td>
+                    </tr>
+                    <tr>
+                        <td><b>Tư duy cốt lõi</b></td>
+                        <td>Định vị dựa trên nội dung phần tử con bên trong (Content-first).</td>
+                        <td>Định vị dựa trên khung lưới cha chia sẵn từ ngoài (Layout-first).</td>
+                    </tr>
+                    <tr>
+                        <td><b>Trường hợp áp dụng</b></td>
+                        <td>Thanh Menu điều hướng, căn giữa cụm icon nút bấm nhỏ, các khối xếp hàng đơn giản.</td>
+                        <td>Giao diện tổng thể trang web (Layout lớn), bảng Dashboard phức tạp, bộ sưu tập hình ảnh không đồng đều.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card" id="c2">
+            <h2>Câu 2: Phân biệt Var, Let và Const trong JavaScript</h2>
+            <p>Việc hiểu rõ phạm vi hoạt động của biến là yếu tố cốt lõi giúp mã nguồn vận hành chính xác, tránh lỗi logic chạy ngầm ngắt quãng hệ thống:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Đặc tính</th>
+                        <th>var</th>
+                        <th>let</th>
+                        <th>const</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Phạm vi (Scope)</b></td>
+                        <td>Function Scope hoặc Global Scope (Bị tràn biến ra ngoài khối lệnh).</td>
+                        <td>Block Scope <code>{ }</code> (Chỉ tồn tại trong cặp ngoặc nhọn khai báo).</td>
+                        <td>Block Scope <code>{ }</code> (Chỉ tồn tại trong cặp ngoặc nhọn khai báo).</td>
+                    </tr>
+                    <tr>
+                        <td><b>Hoisting</b></td>
+                        <td>Có (Khai báo được đưa lên đầu, giá trị khởi tạo là <code>undefined</code>).</td>
+                        <td>Có (Nhưng nằm trong vùng chết Temporal Dead Zone, lỗi nếu gọi trước).</td>
+                        <td>Có (Nằm trong vùng chết Temporal Dead Zone, lỗi nếu gọi trước).</td>
+                    </tr>
+                    <tr>
+                        <td><b>Gán lại giá trị</b></td>
+                        <td>Có thể gán lại thoải mái.</td>
+                        <td>Có thể gán lại thoải mái.</td>
+                        <td><b>Không thể gán lại</b> (Báo lỗi nếu cố tình ghi đè giá trị hằng số).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card" id="c3">
+            <h2>Câu 3: Lỗ hổng DOM-based XSS (Injection) và Cách Phòng Tránh</h2>
+            <h3>1. Khái niệm</h3>
+            <p>DOM-based XSS xảy ra khi mã nguồn JavaScript phía Client lấy dữ liệu trực tiếp từ input đầu vào không an toàn của người dùng (như ô tìm kiếm, URL hash) rồi in trực tiếp vào cây cấu trúc DOM thông qua các thuộc tính nguy hiểm như <code>innerHTML</code> mà không qua bộ lọc kiểm duyệt.</p>
+            
+            <h3>2. Cơ chế nguy cơ</h3>
+            <p>Nếu người dùng cố tình nhập chuỗi mã độc dạng: <code>&lt;script&gt;malicious_code()&lt;/script&gt;</code> hoặc cấu trúc thẻ ảnh lỗi kích hoạt hàm phụ: <code>&lt;img src="x" onerror="steal_cookie()"&gt;</code>, trình duyệt sẽ hiểu nhầm đó là lệnh hệ thống và thực thi ngay lập tức, dẫn đến mất an toàn thông tin hoặc lộ Token/Session cá nhân.</p>
+
+            <h3>3. Giải pháp khắc phục triệt để</h3>
+            <ul>
+                <li>Ưu tiên sử dụng thuộc tính <code>textContent</code> hoặc <code>innerText</code> thay cho <code>innerHTML</code> khi render chuỗi thuần túy (Trình duyệt sẽ tự ép chuỗi đó thành văn bản thường chứ không thực thi mã lệnh).</li>
+                <li>Sử dụng các thư viện lọc chuỗi đầu vào chuyên dụng như <i>DOMPurify</i> để làm sạch chuỗi độc hại trước khi in ra màn hình.</li>
+            </ul>
+        </div>
+
+        <div class="card" id="c4">
+            <h2>Câu 4: Kỹ thuật Event Delegation (Ủy quyền sự kiện)</h2>
+            <h3>1. Khái niệm tư duy</h3>
+            <p>Event Delegation là kỹ thuật tận dụng cơ chế nổi bọt sự kiện (Event Bubbling) trong JavaScript để gắn duy nhất một hàm lắng nghe sự kiện (Event Listener) lên một phần tử cha đại diện, thay vì phải gán lặp đi lặp lại hàng trăm bộ lắng nghe sự kiện trên từng phần tử con đơn lẻ.</p>
+            
+            <h3>2. Ví dụ thực tế</h3>
+            <pre><code>// Thay vì gắn sự kiện click cho từng nút xóa của từng món ăn
+document.getElementById("food-container-grid").addEventListener("click", function(event) {
+    // Kiểm tra xem chính xác thẻ con vừa click có phải là nút XÓA hay không
+    if (event.target.classList.contains("btn-delete-item")) {
+        alert("Hệ thống tiến hành xóa sản phẩm chọn!");
+    }
+});</code></pre>
+
+            <h3>3. Lợi ích tối thượng</h3>
+            <ul>
+                <li><b>Tiết kiệm tài nguyên bộ nhớ (RAM):</b> Giảm thiểu số lượng bộ lắng nghe chạy ngầm, giúp website chạy nhanh, không giật lag.</li>
+                <li><b>Hỗ trợ dữ liệu động hoàn hảo:</b> Khi hệ thống thêm mới một món ăn vào danh sách bằng AJAX/Fetch API, món ăn mới đó tự động thừa hưởng sự kiện click từ cha mà lập trình viên không cần viết lại mã gán sự kiện.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>Sinh viên thực hiện: Lê Công Đức Thiện | MSSV: 231A011078 — Trường Đại học Văn Hiến</p>
+    </footer>
+
+</body>
+</html>
